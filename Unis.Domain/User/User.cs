@@ -10,5 +10,7 @@ namespace Unis.Domain
         public string UserName { get; set; }
         [Column("password")]
         public string Password { get; set; }
+
+        public string Role { get; set; }
     }
 }

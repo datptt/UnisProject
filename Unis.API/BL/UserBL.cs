@@ -2,24 +2,33 @@
 using System.Threading.Tasks;
 using Unis.Repository;
 using System.Linq;
+using Unis.Domain;
 
 namespace Unis.API
 {
-    public class UserBL
+    public class UserBL : BaseBL<User>
     {
-        private readonly IUnitOfWork _unitOfWork;
         private readonly IUserRepository _userRepository;
-        public UserBL(IUnitOfWork unitOfWork, IUserRepository userRepository)
+        public UserBL(IUserRepository userRepository, IUnitOfWork unitOfWork) : base(unitOfWork)
         {
-            this._unitOfWork = unitOfWork;
             this._userRepository = userRepository;
         }
 
         public async Task<ServiceResult> Login(string username, string password)
         {
             var serviceResult = new ServiceResult();
-            var user = this._userRepository.List(x =>  x.UserName == username && x.Password == password).FirstOrDefault();
-            serviceResult.Data = user;
+            var user = this._userRepository.List(x => x.UserName == username && x.Password == password).FirstOrDefault();
+            if (user != null)
+            {
+                var token = TokenHelper.CreateToken(user);
+                serviceResult.IsSuccess = true;
+                serviceResult.Data = token;
+            }
+            else
+            {
+                serviceResult.IsSuccess = false;
+                serviceResult.ErrorMessage = "User or password invalid";
+            }
             return serviceResult;
         }
     }

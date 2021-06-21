@@ -8,5 +8,14 @@ namespace Unis.Repository
         public UserRepository(DbFactory dbFactory) : base(dbFactory)
         {
         }
+
+        public User GetUser(string token)
+        {
+            return new User()
+            {
+                UserName = "ptdat"
+            };
+        }
+
     }
 }

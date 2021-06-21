@@ -7,6 +7,8 @@ namespace Unis.API
 
         public HttpStatusCode StatusCode { get; set; }
 
+        public string ErrorMessage { get; set; }
+
         public bool IsSuccess { get; set; }
 
         public void ErrorHandle(Exception e)

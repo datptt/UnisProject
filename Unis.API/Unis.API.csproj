@@ -7,6 +7,7 @@
   <ItemGroup>
     <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.7" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.7" />
   </ItemGroup>
 
   <ItemGroup>
@@ -21,5 +22,6 @@
     <Folder Include="Entities\" />
     <Folder Include="Extensions\" />
     <Folder Include="BL\" />
+    <Folder Include="Authentication\" />
   </ItemGroup>
 </Project>
