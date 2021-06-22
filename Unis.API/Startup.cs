@@ -17,6 +17,8 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authorization.Policy;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.AspNetCore.Http;
 
 namespace Unis.API
 {
@@ -44,8 +46,6 @@ namespace Unis.API
                 .AddDatabase(Configuration)
                 .AddRepositories()
                 .AddServices();
-
-
 
             services.AddControllers();
 
@@ -91,6 +91,7 @@ namespace Unis.API
             app.UseAuthentication();
 
             app.UseAuthorization();
+
 
             app.UseEndpoints(endpoints =>
             {

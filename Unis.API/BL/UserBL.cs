@@ -14,7 +14,7 @@ namespace Unis.API
             this._userRepository = userRepository;
         }
 
-        public async Task<ServiceResult> Login(string username, string password)
+        public ServiceResult Login(string username, string password)
         {
             var serviceResult = new ServiceResult();
             var user = this._userRepository.List(x => x.UserName == username && x.Password == password).FirstOrDefault();
@@ -29,6 +29,13 @@ namespace Unis.API
                 serviceResult.IsSuccess = false;
                 serviceResult.ErrorMessage = "User or password invalid";
             }
+            return serviceResult;
+        }
+
+        public ServiceResult Register(User user)
+        {
+            var serviceResult = new ServiceResult();
+
             return serviceResult;
         }
     }

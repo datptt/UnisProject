@@ -2,8 +2,11 @@
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization.Policy;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Unis.Repository;
 
 namespace Unis.API
@@ -25,10 +28,11 @@ namespace Unis.API
         public static IServiceCollection AddRepositories(this IServiceCollection services)
         {
             return services
+                 .AddSingleton<IPolicyEvaluator, BearerPolicyEvaluator>()
+                 .AddSingleton<IAsyncAuthorizationFilter, BearerAuthorizeFilter>()
                 .AddScoped(typeof(IRepositoryBase<>), typeof(RepositoryBase<>))
-                .AddScoped<IUserRepository, UserRepository>()
-                 .AddScoped<ICalimsService, ClaimsService>()
-                 .AddScoped<IPolicyEvaluator, BearerPolicyEvaluator>();
+                .AddScoped<IUserRepository, UserRepository>();
+                 
         }
 
         public static IServiceCollection AddServices(this IServiceCollection services)

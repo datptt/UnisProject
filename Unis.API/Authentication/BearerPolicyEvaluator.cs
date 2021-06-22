@@ -19,14 +19,9 @@ namespace Unis.API
     {
         private const string Scheme = "Bearer";
 
-        private readonly IUserRepository _repository;
 
-        private readonly ICalimsService _calimsService;
-
-        public BearerPolicyEvaluator(IUserRepository repository, ICalimsService calimsService)
+        public BearerPolicyEvaluator()
         {
-            _repository = repository;
-            _calimsService = calimsService;
         }
 
         public async Task<AuthenticateResult> AuthenticateAsync(AuthorizationPolicy _, HttpContext context)
@@ -68,16 +63,17 @@ namespace Unis.API
             {
                 var claims = new List<Claim>
                 {
-                    new Claim(ClaimTypes.Name,tokenData.UserName),
+                    new Claim(UnisClaim.UNIS_USERNAME,tokenData.UserName),
                     new Claim(ClaimTypes.NameIdentifier,tokenData.UserID),
+                    new Claim(UnisClaim.UNIS_USERID, tokenData.UserID ?? string.Empty),
                     new Claim("Token",token),
-                    new Claim("RoleName",tokenData.RoleName),
-                    new Claim("ID",tokenData.UserID)
+                    new Claim(UnisClaim.UNIS_ROLE, tokenData.RoleName ?? string.Empty),
+                    new Claim(UnisClaim.UNIS_ISADMINISTRATOR, tokenData.IsAdministrator.ToString() ?? string.Empty),
                 };
 
-                var identity = new ClaimsIdentity(claims, "Jwt");
+                var identity = new ClaimsIdentity(claims, Scheme);
                 IPrincipal user = new ClaimsPrincipal(identity);
-                return Task.FromResult(user);
+                return Task.FromResult<IPrincipal>(user);
             }
             return Task.FromResult<IPrincipal>(null);
         }
@@ -146,6 +142,14 @@ namespace Unis.API
             {
                 return false;
 
+            }
+            tokenData.UserName = identity.FindFirst(UnisClaim.UNIS_USERNAME)?.Value;
+            tokenData.RoleName = identity.FindFirst(UnisClaim.UNIS_ROLE)?.Value;
+            tokenData.UserID = identity.FindFirst(UnisClaim.UNIS_USERID)?.Value;
+            string isAdministrator = identity.FindFirst(UnisClaim.UNIS_ISADMINISTRATOR)?.Value;
+            if (!string.IsNullOrWhiteSpace(isAdministrator))
+            {
+                tokenData.IsAdministrator = bool.Parse(isAdministrator);
             }
 
             return true;

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Unis.Domain;
 using Unis.Repository;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -22,17 +23,17 @@ namespace Unis.API.Controllers
             this._userBL = userBL;
         }
 
-        
+
         // POST api/values
         [HttpPost]
         [AllowAnonymous]
-        public async Task<ServiceResult> Login([FromBody] Dictionary<string,object> param)
+        public async Task<ServiceResult> Login([FromBody] Dictionary<string, object> param)
         {
-           return await this._userBL.Login(param.GetValueOrDefault("username")?.ToString(), param.GetValueOrDefault("password")?.ToString());
+            return this._userBL.Login(param.GetValueOrDefault("username")?.ToString(), param.GetValueOrDefault("password")?.ToString());
         }
 
         [HttpGet]
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         public UserInfo Get()
         {
             return new UserInfo()
@@ -40,6 +41,16 @@ namespace Unis.API.Controllers
                 Id = this.User.GetId(),
                 Claims = this.User.Claims.ToDictionary(claim => claim.Type, claim => claim.Value)
             };
+        }
+
+
+        [HttpPost]
+        [Route("Register")]
+        [Authorize("tessttt")]
+        public ServiceResult Register(User user)
+        {
+            ServiceResult serviceResult = new ServiceResult();
+            return serviceResult;
         }
     }
 }
