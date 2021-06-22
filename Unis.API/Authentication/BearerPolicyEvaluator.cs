@@ -46,17 +46,6 @@ namespace Unis.API
                 var authenticateResult = AuthenticateResult.Success(ticket);
                 return await Task.FromResult(authenticateResult);
             }
-            //var user = _repository.GetUser(bearerToken); //get user object from repository.
-
-            ////call calims service to create some claims.
-
-            //if (_calimsService.CreateClaimsPrincipal(user) == null) return Task.FromResult(AuthenticateResult.Fail("Invalid token"));
-
-            //var ticket = new AuthenticationTicket(_calimsService.CreateClaimsPrincipal(user), Scheme);
-
-            //var authenticateResult = AuthenticateResult.Success(ticket);
-
-            //return Task.FromResult(authenticateResult);
         }
 
         public Task<PolicyAuthorizationResult> AuthorizeAsync(AuthorizationPolicy _,
